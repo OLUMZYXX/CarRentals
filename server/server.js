@@ -18,8 +18,8 @@ await connectDb()
 app.use(
   cors({
     origin: [
-      'https://car-rentals-self-chi.vercel.app/', // replace with your actual Vercel frontend domain
-      'http://localhost:3000', // allow local development
+      'https://car-rentals-self-chi.vercel.app', // <-- No trailing slash
+      'http://localhost:3000',
     ],
     credentials: true,
   })
