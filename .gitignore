@@ -1,0 +1,43 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment variables
+.env
+.env.*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# VSCode
+.vscode/
+
+# Local data/uploads
+uploads/
+public/uploads/
+client/uploads/
+server/uploads/
+
+# Misc
+*.local
+*.log
+
+# Excel/CSV test data
+*.csv
+*.xlsx
+
+# Ignore sensitive files
+client/.env
+server/.env
+
+# Ignore package-lock if you want
+# package-lock.json
