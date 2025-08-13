@@ -18,9 +18,10 @@ await connectDb()
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
-      'https://car-rentals-self-chi.vercel.app',
+      'https://car-rentals-kp8htb0tt-olumzyxxs-projects.vercel.app/',
       'http://localhost:3000',
       'http://localhost:3001',
+      'http://localhost:5173', // Added Vite default port
     ]
 
     // Allow requests with no origin (like mobile apps or curl requests)
@@ -44,10 +45,17 @@ app.use(cors(corsOptions))
 
 // Additional headers middleware
 app.use((req, res, next) => {
-  res.header(
-    'Access-Control-Allow-Origin',
-    'https://car-rentals-self-chi.vercel.app'
-  )
+  // Dynamically set Access-Control-Allow-Origin based on request origin
+  const allowedOrigins = [
+    'https://car-rentals-kp8htb0tt-olumzyxxs-projects.vercel.app/',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:5173',
+  ]
+  const origin = req.headers.origin
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin)
+  }
   res.header('Access-Control-Allow-Credentials', 'true')
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
   res.header(
