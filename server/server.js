@@ -18,7 +18,7 @@ await connectDb()
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
-      'https://car-rentals-kp8htb0tt-olumzyxxs-projects.vercel.app/',
+      'https://car-rentals-self-chi.vercel.app',
       'http://localhost:3000',
       'http://localhost:3001',
       'http://localhost:5173', // Added Vite default port
@@ -47,7 +47,7 @@ app.use(cors(corsOptions))
 app.use((req, res, next) => {
   // Dynamically set Access-Control-Allow-Origin based on request origin
   const allowedOrigins = [
-    'https://car-rentals-kp8htb0tt-olumzyxxs-projects.vercel.app/',
+    'https://car-rentals-self-chi.vercel.app',
     'http://localhost:3000',
     'http://localhost:3001',
     'http://localhost:5173',
