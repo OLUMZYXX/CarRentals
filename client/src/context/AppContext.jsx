@@ -3,7 +3,10 @@ import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL
+// Set axios base URL from environment variable
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL.endsWith('/')
+  ? import.meta.env.VITE_BASE_URL.slice(0, -1)
+  : import.meta.env.VITE_BASE_URL
 export const AppContext = createContext()
 
 export const AppProvider = ({ children }) => {
