@@ -5,6 +5,8 @@ import connectDb from './configs/db.js'
 import userRouter from './routes/userRoutes.js'
 import ownerRouter from './routes/ownerRoutes.js'
 import bookingRouter from './routes/bookingRoutes.js'
+import googleAuthRouter from './routes/googleAuthRoutes.js'
+import passwordRouter from './routes/passwordRoutes.js'
 
 // initialize express app
 const app = express()
@@ -19,6 +21,8 @@ app.use(express.json())
 // routes
 app.get('/', (req, res) => res.send('Server is Running'))
 app.use('/api/user', userRouter)
+app.use('/api/user', googleAuthRouter)
+app.use('/api/user', passwordRouter)
 app.use('/api/owner', ownerRouter)
 app.use('/api/bookings', bookingRouter)
 // error handling middleware

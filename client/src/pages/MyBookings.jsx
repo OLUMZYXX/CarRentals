@@ -5,46 +5,35 @@ import { useAppContext } from '../context/AppContext'
 import toast from 'react-hot-toast'
 
 const MyBookings = () => {
-  const { axios, currency, token } = useAppContext()
+  const { axios, currency, token, setShowLogin } = useAppContext()
   const [bookings, setBookings] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  const fetchMyBookings = async () => {
-    try {
-      const { data } = await axios.get('/api/bookings/user')
-      if (data.success) {
-        setBookings(data.data)
-      } else {
-        setBookings([])
-        toast.error(data.message || 'Failed to fetch bookings')
-      }
-    } catch {
-      setBookings([])
-      toast.error('Error fetching bookings')
-    } finally {
-      setLoading(false)
-    }
-  }
 
   useEffect(() => {
-    if (token) {
-      fetchMyBookings()
-    } else {
-      setLoading(false)
+    if (!token) {
+      toast('Login to show your bookings', {
+        icon: '🔒',
+        style: { background: '#fffbe6', color: '#120735' },
+      })
+      setShowLogin(true)
+      setBookings([])
+      return
     }
+    const fetchMyBookings = async () => {
+      try {
+        const { data } = await axios.get('/api/bookings/user')
+        if (data.success) {
+          setBookings(data.data)
+        } else {
+          toast.error(data.message || 'Failed to fetch bookings')
+        }
+      } catch {
+        toast.error('Error fetching bookings')
+      }
+    }
+    fetchMyBookings()
+    // Only run on mount
     // eslint-disable-next-line
-  }, [token])
-
-  if (!token && !loading) {
-    return (
-      <div className='px-4 md:px-8 lg:px-16 xl:px-20 2xl:px-32 mt-16 text-sm w-full'>
-        <div className='mb-6'>
-          <h1 className='text-2xl font-semibold text-[#120735]'>My Bookings</h1>
-          <p className='text-gray-500'>Login to show your bookings.</p>
-        </div>
-      </div>
-    )
-  }
+  }, [token, setShowLogin])
 
   return (
     <div className='px-4 md:px-8 lg:px-16 xl:px-20 2xl:px-32 mt-16 text-sm w-full'>
@@ -54,6 +43,11 @@ const MyBookings = () => {
       </div>
 
       <div className='space-y-8'>
+        {bookings.length === 0 && (
+          <div className='text-center text-gray-500 py-10'>
+            Login to show your bookings
+          </div>
+        )}
         {bookings.map((booking, i) => (
           <div
             key={booking._id}
