@@ -14,16 +14,54 @@ const app = express()
 // connected to MongoDB
 await connectDb()
 
-// middleware
-app.use(
-  cors({
-    origin: [
-      'https://car-rentals-self-chi.vercel.app', // <-- No trailing slash
+// CORS configuration
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'https://car-rentals-self-chi.vercel.app',
       'http://localhost:3000',
-    ],
-    credentials: true,
-  })
-)
+      'http://localhost:3001',
+    ]
+
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true)
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-requested-with'],
+  preflightContinue: false,
+  optionsSuccessStatus: 200,
+}
+
+// Apply CORS middleware
+app.use(cors(corsOptions))
+
+// Additional headers middleware
+app.use((req, res, next) => {
+  res.header(
+    'Access-Control-Allow-Origin',
+    'https://car-rentals-self-chi.vercel.app'
+  )
+  res.header('Access-Control-Allow-Credentials', 'true')
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  )
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
+  next()
+})
+
 app.use(express.json())
 
 // routes
@@ -33,6 +71,7 @@ app.use('/api/user', googleAuthRouter)
 app.use('/api/user', passwordRouter)
 app.use('/api/owner', ownerRouter)
 app.use('/api/bookings', bookingRouter)
+
 // error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack)
@@ -44,3 +83,5 @@ const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+
+export default app
