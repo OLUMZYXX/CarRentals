@@ -1,6 +1,6 @@
 import imagekit from '../configs/imageKit.js'
 import Booking from '../models/booking.js'
-import Car from '../models/car.js'
+import Car from '../models/Car.js'
 import User from '../models/user.js'
 import fs from 'fs'
 export const changeRoleToOwner = async (req, res) => {
