@@ -5,8 +5,9 @@ import { useAppContext } from '../context/AppContext'
 import toast from 'react-hot-toast'
 
 const MyBookings = () => {
-  const { axios, currency } = useAppContext()
+  const { axios, currency, token } = useAppContext()
   const [bookings, setBookings] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const fetchMyBookings = async () => {
     try {
@@ -14,18 +15,37 @@ const MyBookings = () => {
       if (data.success) {
         setBookings(data.data)
       } else {
+        setBookings([])
         toast.error(data.message || 'Failed to fetch bookings')
       }
     } catch {
+      setBookings([])
       toast.error('Error fetching bookings')
+    } finally {
+      setLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchMyBookings()
-    // Only run on mount
+    if (token) {
+      fetchMyBookings()
+    } else {
+      setLoading(false)
+    }
     // eslint-disable-next-line
-  }, [])
+  }, [token])
+
+  if (!token && !loading) {
+    return (
+      <div className='px-4 md:px-8 lg:px-16 xl:px-20 2xl:px-32 mt-16 text-sm w-full'>
+        <div className='mb-6'>
+          <h1 className='text-2xl font-semibold text-[#120735]'>My Bookings</h1>
+          <p className='text-gray-500'>Login to show your bookings.</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className='px-4 md:px-8 lg:px-16 xl:px-20 2xl:px-32 mt-16 text-sm w-full'>
       <div className='mb-6'>
